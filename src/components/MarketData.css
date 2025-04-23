@@ -1,0 +1,177 @@
+.investment-insights {
+  margin-top: 3rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 2rem;
+}
+
+.insight-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.insight-card h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.data-source {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.data-source:nth-of-type(2) {
+  background-color: #e74c3c;
+}
+
+.chart-container {
+  margin-top: 1rem;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.legend-color {
+  display: inline-block;
+  width: 20px;
+  height: 10px;
+  margin-right: 0.5rem;
+}
+
+.legend-color.houses {
+  background-color: #3498db;
+}
+
+.legend-color.units {
+  background-color: #e74c3c;
+}
+
+.legend-color.houses-bar {
+  background-color: #2ecc71;
+}
+
+.legend-color.units-bar {
+  background-color: #f39c12;
+}
+
+.price-history-chart, .rental-yield-chart {
+  display: flex;
+  height: 250px;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 0.5rem;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  width: 80px;
+}
+
+.chart-area {
+  flex: 1;
+  border-left: 1px solid #ecf0f1;
+  border-bottom: 1px solid #ecf0f1;
+  position: relative;
+}
+
+.x-axis {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.x-label {
+  width: 16.66%;
+  text-align: center;
+}
+
+/* Bar chart specific styles */
+.rental-yield-chart .chart-area {
+  display: flex;
+  justify-content: space-around;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20%;
+}
+
+.bar-label {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.bar-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+}
+
+.bar {
+  width: 30px;
+  border-radius: 4px 4px 0 0;
+}
+
+.bar.houses-bar {
+  background-color: #2ecc71;
+}
+
+.bar.units-bar {
+  background-color: #f39c12;
+}
+
+@media (max-width: 768px) {
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .y-axis {
+    width: 60px;
+    font-size: 0.7rem;
+  }
+  
+  .x-axis {
+    font-size: 0.7rem;
+  }
+  
+  .bar {
+    width: 20px;
+  }
+}
