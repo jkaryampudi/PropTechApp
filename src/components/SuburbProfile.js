@@ -15,7 +15,7 @@ import { Chart as ChartJS,
 import { Radar, Pie, Line, Bar } from 'react-chartjs-2';
 import { useParams, useNavigate } from 'react-router-dom';
 import './SuburbProfile.css';
-import { FaInfoCircle, FaHome, FaChartBar, FaMapMarkedAlt, FaBed, FaBath, FaCar, FaRulerCombined, FaMapMarkerAlt, FaHeart, FaRegHeart, FaArrowLeft, FaTimes } from 'react-icons/fa';
+import { FaInfoCircle, FaHome, FaChartBar, FaMapMarkedAlt, FaBed, FaBath, FaCar, FaRulerCombined, FaMapMarkerAlt, FaHeart, FaRegHeart, FaArrowLeft, FaTimes, FaArrowRight } from 'react-icons/fa';
 import PropertyDetails from './PropertyDetails';
 import propertyData from '../data/propertyData';
 import suburbData from '../data/suburbData';
@@ -660,214 +660,212 @@ const SuburbProfile = ({ suburb: propSuburb, onClose }) => {
               Showing {getPropertiesForSuburb().length} properties in {suburb.name}
             </p>
             
+            {/* Updated property grid with exactly 3 columns */}
             <div className="property-grid" style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))',
-              gap: '20px'
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '20px',
+              background: '#f9fbfd'
             }}>
               {getPropertiesForSuburb().map(property => (
                 <div className="property-card" key={property.id} style={{
                   border: '1px solid #eee',
                   borderRadius: '8px',
                   overflow: 'hidden',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+                  background: 'white',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column'
                 }}>
-                  <div className="property-image" style={{ position: 'relative' }}>
-                    {/* Blue rectangle placeholder for property image */}
-                    <div style={{ 
-                      backgroundColor: '#3498db', 
-                      width: '100%', 
-                      height: '200px',
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      justifyContent: 'flex-start',
-                      padding: '10px',
+                  {/* Property image with price overlay */}
+                  <div className="property-image" style={{ 
+                    position: 'relative',
+                    height: '200px',
+                    overflow: 'hidden'
+                  }}>
+                    <img 
+                      src={property.image || '/images/property-placeholder.jpg'} 
+                      alt={property.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'transform 0.5s ease'
+                      }}
+                    />
+                    <div className="property-price" style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      background: '#1a3a6d',
                       color: 'white',
+                      padding: '8px 16px',
                       fontSize: '18px',
                       fontWeight: 'bold'
                     }}>
                       {formatCurrency(property.price)}
                     </div>
-                    <button 
-                      className="favorite-btn"
-                      onClick={() => toggleSaveProperty(property.id)}
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        background: 'none',
-                        border: 'none',
-                        color: savedProperties.includes(property.id) ? '#e74c3c' : 'white',
-                        fontSize: '20px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {savedProperties.includes(property.id) ? <FaHeart /> : <FaRegHeart />}
-                    </button>
                   </div>
                   
-                  <div className="property-details" style={{ padding: '15px' }}>
-                    <h3 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>{property.title}</h3>
-                    <p style={{ 
-                      margin: '0 0 15px 0', 
+                  {/* Property content */}
+                  <div className="property-content" style={{
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1
+                  }}>
+                    {/* Property title */}
+                    <h3 style={{
+                      fontSize: '18px',
+                      fontWeight: 'bold',
+                      margin: '0 0 8px 0',
+                      color: '#333'
+                    }}>
+                      {property.title}
+                    </h3>
+                    
+                    {/* Property address */}
+                    <p style={{
+                      fontSize: '14px',
                       color: '#666',
+                      margin: '0 0 16px 0',
                       display: 'flex',
                       alignItems: 'center'
                     }}>
-                      <FaMapMarkerAlt style={{ marginRight: '5px' }} /> {property.address}
+                      <FaMapMarkerAlt style={{ marginRight: '5px', color: '#0052FF' }} />
+                      {property.address}
                     </p>
                     
-                    <div className="property-features" style={{
+                    {/* Property specs */}
+                    <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      borderBottom: '1px solid #eee',
-                      paddingBottom: '15px',
-                      marginBottom: '15px'
+                      marginBottom: '16px',
+                      borderBottom: '1px solid #f0f0f0',
+                      paddingBottom: '16px'
                     }}>
-                      <div style={{ textAlign: 'center' }}>
-                        <FaBed style={{ color: '#666', marginBottom: '5px' }} />
-                        <p style={{ margin: '0', fontSize: '16px' }}>{property.beds || property.bedrooms}</p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#999' }}>Beds</p>
+                      {/* Beds */}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                      }}>
+                        <FaBed style={{ color: '#0052FF', fontSize: '18px', marginBottom: '4px' }} />
+                        <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{property.beds}</span>
+                        <span style={{ fontSize: '12px', color: '#666' }}>Beds</span>
                       </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <FaBath style={{ color: '#666', marginBottom: '5px' }} />
-                        <p style={{ margin: '0', fontSize: '16px' }}>{property.baths || property.bathrooms}</p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#999' }}>Baths</p>
+                      
+                      {/* Baths */}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                      }}>
+                        <FaBath style={{ color: '#0052FF', fontSize: '18px', marginBottom: '4px' }} />
+                        <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{property.baths}</span>
+                        <span style={{ fontSize: '12px', color: '#666' }}>Baths</span>
                       </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <FaCar style={{ color: '#666', marginBottom: '5px' }} />
-                        <p style={{ margin: '0', fontSize: '16px' }}>{property.parking}</p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#999' }}>Parking</p>
+                      
+                      {/* Parking */}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                      }}>
+                        <FaCar style={{ color: '#0052FF', fontSize: '18px', marginBottom: '4px' }} />
+                        <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{property.parking}</span>
+                        <span style={{ fontSize: '12px', color: '#666' }}>Parking</span>
                       </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <FaRulerCombined style={{ color: '#666', marginBottom: '5px' }} />
-                        <p style={{ margin: '0', fontSize: '16px' }}>{property.size}m²</p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#999' }}>Area</p>
+                      
+                      {/* Area */}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                      }}>
+                        <FaRulerCombined style={{ color: '#0052FF', fontSize: '18px', marginBottom: '4px' }} />
+                        <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{property.size}m²</span>
+                        <span style={{ fontSize: '12px', color: '#666' }}>Area</span>
                       </div>
                     </div>
                     
-                    <div className="investment-metrics" style={{
+                    {/* Investment metrics */}
+                    <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      marginBottom: '15px'
+                      marginBottom: '16px',
+                      borderBottom: '1px solid #f0f0f0',
+                      paddingBottom: '16px'
                     }}>
-                      <div style={{ 
-                        background: '#e8f4fc', 
-                        padding: '8px 12px', 
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        flex: '1',
-                        marginRight: '8px'
-                      }}>
-                        <p style={{ margin: '0', fontSize: '16px', fontWeight: 'bold' }}>
-                          {property.investment?.rentalYield || '3.5'}%
-                        </p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>Rental Yield</p>
+                      {/* Rental Yield */}
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontWeight: 'bold', color: '#0052FF', fontSize: '16px' }}>
+                          {property.investment?.rentalYield || 3.5}%
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666' }}>Rental Yield</div>
                       </div>
-                      <div style={{ 
-                        background: '#e8f8f0', 
-                        padding: '8px 12px', 
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        flex: '1',
-                        marginRight: '8px'
-                      }}>
-                        <p style={{ margin: '0', fontSize: '16px', fontWeight: 'bold' }}>
-                          {property.investment?.capitalGrowth || '5.2'}%
-                        </p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>Capital Growth</p>
+                      
+                      {/* Capital Growth */}
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontWeight: 'bold', color: '#0052FF', fontSize: '16px' }}>
+                          {property.investment?.capitalGrowth || 6.4}%
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666' }}>Capital Growth</div>
                       </div>
-                      <div style={{ 
-                        background: '#fdf9e8', 
-                        padding: '8px 12px', 
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        flex: '1'
-                      }}>
-                        <p style={{ margin: '0', fontSize: '16px', fontWeight: 'bold' }}>
-                          ${property.investment?.weeklyCashflow || '25'}
-                        </p>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>Weekly Cashflow</p>
+                      
+                      {/* Weekly Cashflow */}
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontWeight: 'bold', color: '#0052FF', fontSize: '16px' }}>
+                          ${property.investment?.weeklyCashflow || 35}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666' }}>Weekly Cashflow</div>
                       </div>
                     </div>
                     
-                    <div className="agent-info" style={{
+                    {/* Agent info */}
+                    <div style={{
                       display: 'flex',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '15px'
+                      marginBottom: '16px'
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img 
-                          src={`https://randomuser.me/api/portraits/thumb/${property.id % 2 === 0 ? 'men' : 'women'}/${property.id * 10}.jpg`} 
-                          alt="Agent" 
-                          style={{ 
-                            width: '30px', 
-                            height: '30px', 
-                            borderRadius: '50%',
-                            marginRight: '10px'
-                          }}
-                        />
-                        <span>{property.id % 2 === 0 ? 'Robert Brown' : 'Jessica Smith'}</span>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>
+                        {property.agent?.name || 'Jessica Smith'}
                       </div>
-                      <span style={{ color: '#999', fontSize: '14px' }}>
-                        Listed {property.id % 2 === 0 ? '5' : '28'} Mar 2025
-                      </span>
+                      <div style={{ fontSize: '14px', color: '#666' }}>
+                        Listed {property.agent?.listedDate || '28 Mar 2025'}
+                      </div>
                     </div>
                     
-                    <div className="property-actions" style={{
-                      display: 'flex',
-                      justifyContent: 'space-between'
-                    }}>
-                      <button 
-                        className="view-details-btn"
-                        onClick={() => handleViewDetails(property.id)}
-                        style={{
-                          background: '#3498db',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          padding: '10px 20px',
-                          flex: '1',
-                          marginRight: '10px',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        View Details →
-                      </button>
-                      <button 
-                        className="favorite-btn-outline"
-                        onClick={() => toggleSaveProperty(property.id)}
-                        style={{
-                          background: 'white',
-                          color: savedProperties.includes(property.id) ? '#e74c3c' : '#666',
-                          border: `1px solid ${savedProperties.includes(property.id) ? '#e74c3c' : '#ddd'}`,
-                          borderRadius: '4px',
-                          padding: '10px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {savedProperties.includes(property.id) ? <FaHeart /> : <FaRegHeart />}
-                      </button>
-                    </div>
+                    {/* View Details button */}
+                    <button 
+                      onClick={() => handleViewDetails(property.id)}
+                      style={{
+                        backgroundColor: '#0052FF',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '12px',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginTop: 'auto',
+                        transition: 'background-color 0.2s ease'
+                      }}
+                    >
+                      View Details <FaArrowRight />
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
-            
-            {getPropertiesForSuburb().length === 0 && (
-              <div className="no-properties-message" style={{
-                textAlign: 'center',
-                padding: '40px',
-                background: '#f9f9f9',
-                borderRadius: '8px'
-              }}>
-                <p>No properties found for this suburb. Please check back later for new listings.</p>
-              </div>
-            )}
           </div>
         )}
 
@@ -875,76 +873,161 @@ const SuburbProfile = ({ suburb: propSuburb, onClose }) => {
           <div className="market-tab">
             <h2>Market Data</h2>
             
-            <div className="market-charts-container" style={{ 
+            <div className="charts-container" style={{ 
               display: 'flex', 
-              flexDirection: 'column', 
+              flexWrap: 'wrap', 
               gap: '30px', 
-              marginTop: '20px' 
+              marginTop: '30px',
+              marginBottom: '30px'
             }}>
               <div className="chart-box" style={{ 
+                flex: '1', 
+                minWidth: '300px', 
                 border: '1px solid #eee', 
                 borderRadius: '8px',
                 padding: '20px',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                  <h3 style={{ margin: '0' }}>Price History (10 Years)</h3>
+                <h3 style={{ borderBottom: '2px solid #3498db', paddingBottom: '10px', marginBottom: '20px' }}>
+                  Price History
                   <span style={{ 
                     fontSize: '12px', 
                     fontWeight: 'normal', 
-                    backgroundColor: '#3498db', 
+                    backgroundColor: '#e74c3c', 
                     color: 'white',
                     padding: '3px 8px',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    marginLeft: '10px'
                   }}>
                     Data: CoreLogic
                   </span>
-                </div>
-                <div style={{ height: '350px' }}>
+                </h3>
+                <div style={{ height: '300px' }}>
                   <Line data={priceHistoryData} options={priceHistoryOptions} />
                 </div>
+                <p style={{ color: '#666', fontSize: '14px', marginTop: '15px' }}>
+                  Historical price trends for houses and units in {suburb.name} over the past 10 years.
+                </p>
               </div>
 
               <div className="chart-box" style={{ 
+                flex: '1', 
+                minWidth: '300px', 
                 border: '1px solid #eee', 
                 borderRadius: '8px',
                 padding: '20px',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                  <h3 style={{ margin: '0' }}>Rental Yield Trends</h3>
+                <h3 style={{ borderBottom: '2px solid #3498db', paddingBottom: '10px', marginBottom: '20px' }}>
+                  Rental Yield Trends
                   <span style={{ 
                     fontSize: '12px', 
                     fontWeight: 'normal', 
-                    backgroundColor: '#3498db', 
+                    backgroundColor: '#f39c12', 
                     color: 'white',
                     padding: '3px 8px',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    marginLeft: '10px'
                   }}>
                     Data: SQM Research
                   </span>
-                </div>
-                <div style={{ height: '350px' }}>
+                </h3>
+                <div style={{ height: '300px' }}>
                   <Bar data={rentalYieldData} options={rentalYieldOptions} />
                 </div>
+                <p style={{ color: '#666', fontSize: '14px', marginTop: '15px' }}>
+                  Rental yield trends for houses and units in {suburb.name} over the past 5 years.
+                </p>
               </div>
             </div>
           </div>
         )}
 
         {activeTab === 'map' && (
-          <div className="location-tab">
+          <div className="map-tab">
             <h2>Location & Amenities</h2>
-            <div className="map-container" style={{ height: '450px', marginBottom: '20px' }}>
-              <iframe
-                title="Suburb Map"
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                style={{ border: 0, borderRadius: '8px' }}
-                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBQgCnA9zBPCxuRXQm-o_H1Pers5yjRPP8&q=${suburb.name},+NSW,+Australia`}
-                allowFullScreen
-              ></iframe>
+            <div className="map-container" style={{ height: '400px', marginBottom: '20px' }}>
+              {/* Placeholder for Google Maps */}
+              <div style={{ 
+                backgroundColor: '#f5f5f5', 
+                width: '100%', 
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#666',
+                fontSize: '16px',
+                border: '1px solid #ddd',
+                borderRadius: '8px'
+              }}>
+                Map view is currently unavailable
+              </div>
+            </div>
+            
+            <div className="amenities-container">
+              <h3>Nearby Amenities</h3>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '15px',
+                marginTop: '15px'
+              }}>
+                <div className="amenity-card" style={{
+                  border: '1px solid #eee',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#3498db' }}>Schools</h4>
+                  <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                    <li>Gregory Hills Public School</li>
+                    <li>St Gregory's College</li>
+                    <li>Macarthur Anglican School</li>
+                  </ul>
+                </div>
+                
+                <div className="amenity-card" style={{
+                  border: '1px solid #eee',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#3498db' }}>Shopping</h4>
+                  <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                    <li>Gregory Hills Town Centre</li>
+                    <li>Narellan Town Centre</li>
+                    <li>Macarthur Square</li>
+                  </ul>
+                </div>
+                
+                <div className="amenity-card" style={{
+                  border: '1px solid #eee',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#3498db' }}>Transport</h4>
+                  <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                    <li>Bus Routes 301, 302</li>
+                    <li>Leppington Train Station</li>
+                    <li>M5 Motorway Access</li>
+                  </ul>
+                </div>
+                
+                <div className="amenity-card" style={{
+                  border: '1px solid #eee',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#3498db' }}>Healthcare</h4>
+                  <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                    <li>Gregory Hills Medical Centre</li>
+                    <li>Campbelltown Hospital</li>
+                    <li>Camden Hospital</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         )}

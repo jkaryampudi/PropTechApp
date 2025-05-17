@@ -1,8 +1,9 @@
 .footer {
-  background-color: #2c3e50;
-  color: white;
-  padding: 2rem;
-  margin-top: 3rem;
+  background-color: var(--white);
+  color: var(--dark-navy);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+  border-top: 1px solid var(--light-gray);
 }
 
 .footer-content {
@@ -12,24 +13,25 @@
 }
 
 .footer p {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   line-height: 1.6;
+  color: var(--dark-gray);
 }
 
 .copyright {
-  font-size: 0.9rem;
-  color: #bdc3c7;
+  font-size: var(--font-size-small);
+  color: var(--dark-gray);
 }
 
 .footer-attribution {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: var(--spacing-md);
 }
 
 .footer-attribution a {
-  color: #3498db;
+  color: var(--primary-blue);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--font-size-small);
   display: inline-flex;
   align-items: center;
 }
@@ -40,6 +42,6 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 1.5rem;
+    padding: var(--spacing-md);
   }
 }

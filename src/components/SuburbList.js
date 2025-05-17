@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SuburbCard from './SuburbCard';
-import MarketData from './MarketData';
+import PropertyCard from './PropertyCard';
 import PropertyDetails from './PropertyDetails';
 import suburbData from '../data/suburbData';
 import propertyData from '../data/propertyData';
 import './SuburbList.css';
-import { FaHome, FaChartBar, FaBuilding } from 'react-icons/fa';
+import { FaHome, FaChartBar, FaBuilding, FaStar, FaMapMarkedAlt, FaArrowRight } from 'react-icons/fa';
 
 const SuburbList = () => {
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [showAllCards, setShowAllCards] = useState(false);
+  const navigate = useNavigate();
   
   const handleViewPropertyDetails = (propertyId) => {
     console.log("Viewing property details for property ID:", propertyId);
@@ -19,56 +22,131 @@ const SuburbList = () => {
   const handleClosePropertyDetails = () => {
     setSelectedProperty(null);
   };
+
+  const handleViewSuburbProfile = (suburbId) => {
+    console.log("Viewing suburb profile for suburb ID:", suburbId);
+    navigate(`/suburb/${suburbId}`);
+  };
+  
+  // Select top 5 featured properties based on investment potential
+  // Combining rental yield and capital growth as criteria
+  const featuredProperties = [...propertyData]
+    .sort((a, b) => {
+      const scoreA = (a.investment?.rentalYield || 0) + (a.investment?.capitalGrowth || 0);
+      const scoreB = (b.investment?.rentalYield || 0) + (b.investment?.capitalGrowth || 0);
+      return scoreB - scoreA;
+    })
+    .slice(0, 5);
+  
+  // Get top 2 suburbs and top 2 properties for the unified row
+  const topSuburbs = suburbData.slice(0, 2);
+  const topProperties = featuredProperties.slice(0, 2);
+  
+  // Get remaining suburbs and properties for expanded view
+  const remainingSuburbs = suburbData.slice(2);
+  const remainingProperties = featuredProperties.slice(2);
   
   return (
     <div className="suburb-list-container">
-      <h2 className="section-title">High-Potential Suburbs</h2>
+      <h2 className="section-title">
+        <FaStar className="section-icon" />
+        Top Investment Opportunities
+      </h2>
       
-      <div className="suburb-grid">
-        {suburbData.map(suburb => (
-          <div key={suburb.id} className="suburb-card-wrapper">
-            <SuburbCard suburb={suburb} />
+      <div className="unified-card-row">
+        {topSuburbs.map(suburb => (
+          <div key={suburb.id} className="card-wrapper">
+            <div className="card-label">High-Potential Suburb</div>
+            <SuburbCard 
+              suburb={{
+                ...suburb,
+                postcode: suburb.postcode || suburb.location?.split(',')[0] || '',
+                region: suburb.region || suburb.location?.split(',')[1]?.trim() || 'Metropolitan',
+                rating: suburb.rating || (Math.random() * 3 + 5).toFixed(1),
+                housePrice: suburb.medianPrice || 0,
+                unitPrice: suburb.unitPrice || Math.floor(suburb.medianPrice * 0.7) || 0,
+                highlights: suburb.highlights || [
+                  'Close to transport links',
+                  'Vibrant urban precinct',
+                  'Growing demand for housing'
+                ].slice(0, 2)
+              }}
+              onClick={() => handleViewSuburbProfile(suburb.id)}
+            />
+          </div>
+        ))}
+        
+        {topProperties.map(property => (
+          <div key={property.id} className="card-wrapper">
+            <div className="card-label">Featured Property</div>
+            <PropertyCard 
+              property={property}
+              onClick={() => handleViewPropertyDetails(property.id)}
+            />
           </div>
         ))}
       </div>
       
-      {/* Property listings section */}
-      <h2 className="section-title">
-        <FaHome className="section-icon" /> Featured Properties
-      </h2>
-      <div className="property-grid">
-        {propertyData.map(property => (
-          <div key={property.id} className="property-card">
-            <div className="property-image" style={{ backgroundImage: `url(${property.imageUrl || '/images/property-placeholder.jpg'})` }}>
-              <div className="property-price">${property.price.toLocaleString()}</div>
-            </div>
-            <div className="property-content">
-              <h3 className="property-title">{property.title}</h3>
-              <p className="property-address">{property.address}</p>
-              <div className="property-specs">
-                <span className="spec"><FaHome /> {property.beds} beds</span>
-                <span className="spec"><FaBuilding /> {property.baths} baths</span>
-                <span className="spec"><FaChartBar /> {property.parking} parking</span>
-              </div>
-              <div className="property-metrics">
-                <div className="metric">
-                  <span className="metric-label">Rental Yield</span>
-                  <span className="metric-value">{property.rentalYield}%</span>
+      {showAllCards && (
+        <div className="expanded-sections">
+          <div className="section-column">
+            <h3 className="subsection-title">
+              <FaMapMarkedAlt className="section-icon" />
+              More High-Potential Suburbs
+            </h3>
+            
+            <div className="suburb-grid">
+              {remainingSuburbs.map(suburb => (
+                <div key={suburb.id} className="suburb-card-wrapper">
+                  <SuburbCard 
+                    suburb={{
+                      ...suburb,
+                      postcode: suburb.postcode || suburb.location?.split(',')[0] || '',
+                      region: suburb.region || suburb.location?.split(',')[1]?.trim() || 'Metropolitan',
+                      rating: suburb.rating || (Math.random() * 3 + 5).toFixed(1),
+                      housePrice: suburb.medianPrice || 0,
+                      unitPrice: suburb.unitPrice || Math.floor(suburb.medianPrice * 0.7) || 0,
+                      highlights: suburb.highlights || [
+                        'Close to transport links',
+                        'Vibrant urban precinct',
+                        'Growing demand for housing'
+                      ].slice(0, 2)
+                    }}
+                    onClick={() => handleViewSuburbProfile(suburb.id)}
+                  />
                 </div>
-                <div className="metric">
-                  <span className="metric-label">Capital Growth</span>
-                  <span className="metric-value">{property.capitalGrowth}%</span>
-                </div>
-              </div>
-              <button 
-                className="view-details-btn" 
-                onClick={() => handleViewPropertyDetails(property.id)}
-              >
-                View Details
-              </button>
+              ))}
             </div>
           </div>
-        ))}
+          
+          <div className="section-column">
+            <h3 className="subsection-title">
+              <FaStar className="section-icon" />
+              More Featured Properties
+            </h3>
+            
+            <div className="property-grid">
+              {remainingProperties.map(property => (
+                <div key={property.id} className="property-card-wrapper">
+                  <PropertyCard 
+                    property={property}
+                    onClick={() => handleViewPropertyDetails(property.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className="view-more-container">
+        <button 
+          className="view-more-btn" 
+          onClick={() => setShowAllCards(!showAllCards)}
+        >
+          {showAllCards ? 'Show Less' : 'View More Opportunities'} 
+          <FaArrowRight className="btn-icon" />
+        </button>
       </div>
       
       {selectedProperty && (
@@ -77,8 +155,6 @@ const SuburbList = () => {
           onClose={handleClosePropertyDetails} 
         />
       )}
-      
-      <MarketData />
     </div>
   );
 };
